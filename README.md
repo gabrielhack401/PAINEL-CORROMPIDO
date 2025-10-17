@@ -1,10 +1,9 @@
 # PAINEL-CORROMPIDO
 # COLE NO CONSOLE DEVELOPER DO GOOGLE!
-// SCRIPT DE SIMULAÇÃO VISUAL DE HACKING - 15 ABAS FAKE
-// Máximo de abas diferentes, 100% visual, local e seguro.
+// SCRIPT DE SIMULAÇÃO VISUAL DE HACKING - TREMORES E PIXELS QUEIMADOS
+// Totalmente visual, local e seguro. Extremente intenso.
 
 (function() {
-    // VARIÁVEL PARA O DATA URI DA IMAGEM (MESMO QUE ANTES): 
     const MATRIX_IMAGE_DATA_URI = 'COLE_AQUI_SEU_DATA_URI_DA_IMAGEM_MATRIX'; 
 
     // --- 0. Funções de Limpeza e Listagem de IDs ---
@@ -13,7 +12,8 @@
         'bottom-left-threat', 'mid-left-decoder', 'mid-right-packet', 'top-center-firewall', 
         'bottom-center-alerts', 'mid-left-low-priority', 'mid-right-low-priority',
         'top-mid-left-geo', 'top-mid-right-bandwidth', 'center-info-1', 'center-info-2',
-        'scanlines-overlay', 'glitch-border', 'safe-meme-style'
+        'scanlines-overlay', 'glitch-border', 'screen-tremor-overlay', 'pixel-static-overlay', 
+        'crt-effect-overlay', 'safe-meme-style'
     ];
 
     const cleanUp = () => {
@@ -29,7 +29,9 @@
             body.removeAttribute('data-original-style');
         } else {
             body.style.background = '';
-            body.style.filter = '';
+            body.style.filter = ''; 
+            body.style.transform = ''; // Remove tremores
+            body.style.overflow = ''; // Garante que o overflow seja restaurado
         }
     };
     cleanUp();
@@ -37,41 +39,86 @@
     // --- 1. Definição da Animação e Estilos Complexos ---
     const styleSheet = new CSSStyleSheet();
     const complexStyles = `
-    @keyframes safeShake {
+    @keyframes safeShake { /* Para a caixa principal */
         0%, 100% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); }
     }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-4px, -4px); } 60% { transform: translate(4px, 4px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+    @keyframes glitch { /* Para a borda principal */
+        0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-4px, -4px); } 60% { transform: translate(4px, 4px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); }
+    }
+    @keyframes screenTremor { /* TREMOR GLOBAL DA TELA */
+        0% { transform: translate(1px, 1px); }
+        25% { transform: translate(-1px, 0px); }
+        50% { transform: translate(0px, 1px); }
+        75% { transform: translate(1px, -1px); }
+        100% { transform: translate(-1px, 1px); }
+    }
+    @keyframes pixelStatic { /* Ruído visual de pixel */
+        0% { background-position: 0 0; }
+        100% { background-position: 100% 100%; }
+    }
     .matrix-text-style {
         font-family: 'Consolas', monospace;
         color: #0F0;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 0, 0, 0.9); /* Um pouco menos opaco para ver o fundo Matrix */
         padding: 5px;
-        animation: blink 0.3s infinite step-end;
-        font-size: 14px;
+        animation: blink 0.2s infinite step-end; /* Cintilação mais rápida */
+        font-size: 13px; /* Fonte ligeiramente menor para caber mais */
         border: 2px solid #0F0;
-        box-shadow: 0 0 18px rgba(0, 255, 0, 1);
+        box-shadow: 0 0 20px rgba(0, 255, 0, 1), inset 0 0 5px rgba(0, 255, 0, 0.5); /* Sombra interna */
         z-index: 999998;
-        text-shadow: 0 0 5px #0F0;
+        text-shadow: 0 0 8px #0F0; /* Brilho de texto mais forte */
         cursor: pointer;
+        overflow: hidden; /* Para garantir que o conteúdo não vaze */
     }
+    /* Efeitos de Tela Base */
     #scanlines-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999;
         pointer-events: none;
-        background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0px, rgba(0, 0, 0, 0.3) 1px, transparent 2px, transparent 3px);
-        opacity: 0.7;
+        background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.4) 1px, transparent 2px, transparent 3px);
+        opacity: 0.8;
     }
     #glitch-border {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999990;
         pointer-events: none;
-        box-shadow: 0 0 0 5px red, 0 0 0 10px blue, 0 0 0 15px yellow;
-        animation: glitch 0.1s infinite alternate;
-        opacity: 0.7;
-    }`;
+        box-shadow: 0 0 0 8px red, 0 0 0 16px blue, 0 0 0 24px yellow; /* Bordas mais grossas */
+        animation: glitch 0.08s infinite alternate; /* Glitch mais rápido */
+        opacity: 0.8;
+    }
+    /* NOVO EFEITO: Tremor Global da Tela (aplica-se ao body) */
+    body {
+        animation: screenTremor 0.05s infinite; /* Tremor muito rápido */
+        overflow: hidden !important; /* Esconde barras de rolagem causadas pelo tremor */
+    }
+    /* NOVO EFEITO: Ruído de Pixel / Estática (overlay) */
+    #pixel-static-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999;
+        pointer-events: none;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAASFBMVEUAAAD///8AAADLy8vJycnGxsbExMTDw8PCwsLAwMDHx8fPz8/MzMzR0dHT09PS0tLV1dXW1tbZ2dnj4+Pq6urp6enx8fH09PQ/p920AAAAAXRSTlMAQObYZgAAADRJREFUeNpjYBgFo4B+AAEEKwGwgAABBBsAbCAAAIIJgBsIAACCEYAbCAAAgkkA+AAGy5g7QIAAHHlU/8AAAAASUVORK5CYII='); /* Pequeno padrão de ruído */
+        background-size: 10px 10px;
+        animation: pixelStatic 1s linear infinite; /* Anima o fundo de ruído */
+        opacity: 0.1; /* Transparente o suficiente para ser sutil */
+        filter: invert(1); /* Inverte cores para efeito de "burn-in" */
+    }
+    /* NOVO EFEITO: Curvatura e distorção de CRT */
+    #crt-effect-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999997;
+        pointer-events: none;
+        box-shadow: inset 0 0 100px rgba(0,255,0,0.5), inset 0 0 200px rgba(255,0,0,0.3); /* Bordas esmaecidas + burn-in */
+        border-radius: 50%; /* Faz a tela parecer curva */
+        transform: scale(1.05) perspective(100px) rotateX(2deg) rotateY(2deg); /* Perspectiva para curvatura */
+        filter: blur(1px) brightness(1.2); /* Suaviza e intensifica */
+        opacity: 0.2;
+    }
+    `;
 
     try {
         complexStyles.match(/@keyframes [^{]+\{[^}]+\}/g).forEach((rule, i) => styleSheet.insertRule(rule, i));
-        complexStyles.match(/(\.[a-z\-]+|\#[a-z\-]+) [^{]+\{[^}]+\}/g).forEach((rule, i) => styleSheet.insertRule(rule, i + 3));
+        // Ajuste no regex para pegar todos os seletores e suas regras
+        const styleRules = complexStyles.split(/@keyframes [^{]+\{[^}]+\}/).slice(1).join('').match(/((\.[a-z\-]+|\#[a-z\-\s]+|body)\s*[^{]+\{[^}]+\})/g);
+        if (styleRules) {
+            styleRules.forEach((rule, i) => styleSheet.insertRule(rule, i + 5)); // Ajustar o índice base
+        }
         document.adoptedStyleSheets = [...document.adoptedStyleSheets, styleSheet];
     } catch (e) {
         const style = document.createElement('style');
@@ -92,7 +139,7 @@
         body.style.background = '#000';
     } else {
         body.style.background = '#000'; 
-        body.style.filter = 'hue-rotate(100deg) saturate(3) contrast(1.5)';
+        body.style.filter = 'hue-rotate(100deg) saturate(3) contrast(1.5) blur(0.5px)'; // Blur sutil
     }
     
     // --- 3. Criação de Elementos (Função Auxiliar) ---
@@ -114,9 +161,11 @@
 
     // --- 4. 15 Janelas de Simulação + Efeitos de Tela ---
     
-    // Efeitos de Tela
+    // Efeitos de Tela Principais (camadas de efeito)
     const glitchBorder = createAndAppendElement('glitch-border', '', '');
     const scanlines = createAndAppendElement('scanlines-overlay', '', '');
+    const pixelStatic = createAndAppendElement('pixel-static-overlay', '', ''); // Novo
+    const crtEffect = createAndAppendElement('crt-effect-overlay', '', ''); // Novo
 
     const removableElements = [];
 
@@ -124,7 +173,7 @@
     const mainStatus = createAndAppendElement(
         'main-status',
         `position: fixed; bottom: 50%; left: 50%; transform: translate(-50%, -50%); padding: 25px; border-radius: 10px; z-index: 999999; animation: safeShake 0.4s infinite;`,
-        'SISTEMA INVADIDO: [STATUS: ONLINE]',
+        'SISTEMA CRÍTICO: FALHA DE KERNEL',
         true
     );
     removableElements.push(mainStatus);
@@ -181,7 +230,7 @@
         `\n!!! SECURITY ALERT LEVEL 5 !!!\n\n> UNKNOWN THREAD INITIATED\n> LOCATION: UNTRACEABLE\n> ACTION: MANUAL INTERVENTION REQUIRED\n`
     ));
     
-    // --- NOVAS JANELAS PARA COMPLETAR 15 ---
+    // --- Mais Janelas para Completar 15 ---
 
     // 10. Central Esquerda (Baixa Prioridade) - Abaixo da 6
     removableElements.push(createAndAppendElement(
@@ -222,16 +271,15 @@
 
     // --- 5. Configuração de Limpeza Final ---
     // Adiciona o evento de clique para remover TUDO em todos os elementos injetados
+    // Adiciona também os overlays para que o clique em qualquer lugar remova tudo
+    removableElements.push(glitchBorder, scanlines, pixelStatic, crtEffect);
+
     removableElements.forEach(el => {
         el.addEventListener('click', () => {
             cleanUp();
-            console.log("Simulação de hacking de 15 janelas removida e estilos restaurados.");
+            console.log("Simulação de hacking de cinema removida e estilos restaurados.");
         });
     });
-    
-    // As caixas de efeito (glitchBorder, scanlines) também precisam ser adicionadas ao array se quiser que o clique nelas funcione,
-    // mas como elas não têm 'textContent', o clique nelas só funcionaria se fossem adicionadas ao array 'removableElements'
-    // e tivessem 'addEventListener', o que está sendo feito.
 
-    console.log("Simulação MÁXIMA de hacking injetada! Clique em qualquer painel para remover TUDO.");
+    console.log("Simulação de hacking de CINEMA com efeitos de tela queimada injetada! Clique em qualquer painel para remover TUDO.");
 })();
